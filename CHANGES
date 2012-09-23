@@ -1,0 +1,153 @@
+Ledit Version 2.03
+------------------
+
+- [08 Feb 2012] Changed to accept Ledit.input_line even if stdin is not
+  a terminal.
+
+Ledit Version 2.02.1
+--------------------
+
+- [19 Nov 2010] Included patches for Debian.
+
+Ledit Version 2.02.0
+--------------------
+
+- [17 Nov 2010] Fixed bug: failed if history file contained characters
+  whose code >= 128.
+
+Ledit Version 2.02
+------------------
+
+- [16 Nov 2010] Added complete-file-name (linked to TAB).
+- [17 Apr 2009] Fixed bug: "self-insert" did not work as command in .leditrc
+  nor in reverse search.
+
+Ledit Version 2.01
+------------------
+
+- [22 May 2008] Changed in Makefile "+camlp5" into "`camlp5 -where`".
+
+Ledit Version 2.00
+------------------
+
+- [22 Jan 2008] Fixed bug "unix-line-discard": erased the entire line instead
+  of just from beginning to cursor.
+- [18 Jan 2008] Added ability to have a file ".leditrc" in one's home
+  directory (or in environment variable LEDITRC) containing user's bindings.
+  This file can be changed while running ledit, the changes are immediately
+  taken into account. See man page.
+
+Ledit Version 1.17
+------------------
+
+- [16 Jan 2008]
+  The binds to Delete_char do not raise End_of_file any more.
+  Added bind Delete_char_or_end_of_file for control-D.
+  Added sequences:
+    * Delete     (esc [ 3 ~)          = Delete_char
+    * Page Up    (esc [ 5 ~)          = Previous_history
+    * Page Down  (esc [ 6 ~)          = Next_history
+    * Home       (esc O H or esc [ H) = Beginning_of_line
+    * End        (esc O F or esc [ F) = End_of_line
+    * Shift Home (esc [ 2 H)          = Beginning_of_history
+    * Shift End  (esc [ 2 F)          = End_of_history
+- [16 Jan 2008]
+  Added option "-t" for sequences traces (for debugging).
+- [01 Jan 2008] (internal)
+  Rewritten the code in 'revised syntax' (it was in a special syntax close
+  to revised syntax).
+
+Ledit Version 1.16
+------------------
+
+- [29 Dec 2007] Adapted for Camlp5 "strict" mode.
+- [16 Jul 2007] Fixed bug: parentheses did not balance in case of string.
+  E.g. : (foijeoif) balance, but not ("foijfe").
+
+Ledit Version 1.15
+------------------
+
+- [16 Jul 2007] Adapted for Camlp5.
+
+Ledit Version 1.14
+------------------
+
+- [28 Jun 2007] Adapted for Camlp4s 4.02
+- [30 Mar 2007] Fixed bug: reverse incremental search did not work.
+
+Ledit Version 1.13
+------------------
+
+- [20 Mar 2007] Added options specifying encoding: -a for Ascii -u for Utf-8.
+
+Ledit Version 1.12
+------------------
+
+- [03 Jan 2007] Changed man page ledit.l into ledit.1
+
+Ledit Version 1.11
+------------------
+
+- [15 Aug 2001] Added licence (open source)
+
+Ledit Version 1.10
+------------------
+
+- [03 Jul 2001] The history now includes also the last input line not
+  yet validated.
+
+Ledit Version 1.9
+-----------------
+
+- [25 Jun 2001] (internal) Updated for new revised syntax of sequences;
+  added a printer pr_local for the "local" statement
+
+Ledit Version 1.8
+-----------------
+
+- [08 Jun 2001] Added O-sequences (esc-O) and ^[OA ^[OB ^[OC ^[OD
+
+Ledit Version 1.7
+-----------------
+- Added Transpose_chars (^t)
+        Capitalize_word (M-c or esc c)
+        Upcase_word (M-u or esc u)
+        Downcase_word (M-l or esc l)
+
+Ledit Version 1.6
+-----------------
+- Added hack to avoid
+     Fatal error: uncaught exception Sys_error("Bad file number")
+  which sometimes happens when exiting ledit
+
+Ledit Version 1.5
+-----------------
+- Fixed bug shell prompt sometimes displayed to early when quitting ledit.
+
+Ledit Version 1.4
+-----------------
+- Added M-backspace or M-delete for backward-kill-word
+- Tabulations are expanded
+- Fixed bug printing chars between ascii 128 to ascii 159
+- "-c" optional: "ledit comm args" <=> "ledit -c comm args"
+
+Ledit Version 1.3
+-----------------
+- Added expand abbrev M-/
+- Added suspend ^z
+- Fixed bug ^l (refresh line)
+
+Ledit Version 1.2
+-----------------
+- Possible use of keyboard arrows
+- Fixed bug: ^q was not interpreted
+- If the environment variable LC_CTYPE is iso_8859_1, chars whose code > 128
+  are printed directly (else using backslash and code number).
+- Option -v print ledit version and exit.
+
+Ledit Version 1.1
+-----------------
+- First distributed version
+
+Wed Feb 19 08:38:38 MET 1997
+- Fix bug excessive slowness when pasting as input of ledit

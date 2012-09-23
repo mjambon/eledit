@@ -1,0 +1,6 @@
+*.cm*
+*.o
+*~
+eledit
+eledit.1
+
