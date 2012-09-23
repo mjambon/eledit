@@ -9,12 +9,6 @@
 (*                                                                     *)
 (***********************************************************************)
 
-(* $Id: ledit.ml,v 1.68 2012-02-08 09:03:40 deraugla Exp $ *)
-
-(* #load "pa_local.cmo" *)
-(* #load "pa_def.cmo" *)
-(* #load "pa_fstream.cmo" *)
-
 open Printf
 
 type encoding = Ascii | Iso_8859 | Utf_8

@@ -9,8 +9,6 @@
 (*                                                                     *)
 (***********************************************************************)
 
-(* $Id: cursor.ml,v 1.8 2008-01-01 18:46:28 deraugla Exp $ *)
-
 type 'a t =
   { mutable before : 'a list;
     mutable current : 'a option;

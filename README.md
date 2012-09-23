@@ -7,7 +7,7 @@ or in shells (bash, tcsh). To be used with interactive commands.
 Installation
 ------------
 
-Eledit requires only a standard installation of OCaml.
+Building eledit requires only a standard installation of OCaml.
 It no longer relies on Camlp4 or Camlp5.
 It is compiled into a standalone executable that doesn't require an
 OCaml installation to run properly.

@@ -9,8 +9,6 @@
 (*                                                                     *)
 (***********************************************************************)
 
-(* $Id: ledit.mli,v 1.13 2008-01-16 09:24:48 deraugla Exp $ *)
-
 val input_char : in_channel -> string
 
 val set_prompt : string -> unit
