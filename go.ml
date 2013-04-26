@@ -19,30 +19,36 @@ let usage () =
   prerr_string argv.(0);
   prerr_endline " [options] [comm [args]]";
   prerr_endline " -a : ascii encoding";
-  prerr_endline " -h file : history file";
-  prerr_endline " -x  : don't remove old contents of history";
+  prerr_endline " -h file : history file (default: $HOME/.eledit_history)";
+  prerr_endline " -x  : don't remove old contents of history (default)";
+  prerr_endline " -y  : remove old contents of history (old default)";
   prerr_endline " -l len : line max length";
   prerr_endline " -t  : trace sequences (for debugging)";
-  prerr_endline " -u : utf-8 encoding";
-  prerr_endline " -v : prints ledit version and exit";
+  prerr_endline " -u  : utf-8 encoding";
+  prerr_endline " -v  : prints ledit version and exit";
   prerr_endline "Exec comm [args] as child process"
+
+let init_histfile () =
+  try Filename.concat (Sys.getenv "HOME") ".eledit_history"
+  with Not_found -> ""
 
 let get_arg i =
   if i >= Array.length argv then begin usage (); exit 1 end else argv.(i)
 
-let histfile = ref ""
-let trunc = ref true
-let comm = ref "cat"
-let args = ref [| "cat" |]
+let parse_args () =
+  let histfile = ref (init_histfile ()) in
+  let trunc = ref false in
+  let comm = ref "cat" in
+  let args = ref [| "cat" |] in
 
-let _ =
   let rec arg_loop i =
     if i < Array.length argv then
       arg_loop
         (match argv.(i) with
            "-a" -> set_ascii (); i + 1
          | "-h" -> histfile := get_arg (i + 1); i + 2
-         | "-help" -> usage (); exit 0
+         | "-help"
+         | "--help" -> usage (); exit 0
          | "-l" ->
              let x = get_arg (i + 1) in
              (try set_max_len (int_of_string x) with _ -> usage (); exit 1);
@@ -68,7 +74,10 @@ let _ =
                  end
              else Array.length argv)
   in
-  arg_loop 1
+  arg_loop 1;
+  !histfile, !trunc, !comm, !args
+
+
 
 let string_of_signal =
   function
@@ -90,6 +99,7 @@ let stupid_hack_to_avoid_sys_error_at_exit () =
   Unix.dup2 (Unix.openfile "/dev/null" [Unix.O_WRONLY] 0) Unix.stdout
 
 let go () =
+  let histfile, trunc, comm, args = parse_args () in
   let (id, od) = Unix.pipe () in
   let pid = Unix.fork () in
   if pid < 0 then failwith "fork"
@@ -112,7 +122,7 @@ let go () =
          signal_behavior)
       in
       try
-        if !histfile <> "" then open_histfile !trunc !histfile;
+        if histfile <> "" then open_histfile trunc histfile;
         catch_break true;
         read_loop ()
       with x ->
@@ -130,7 +140,7 @@ let go () =
       Unix.dup2 id Unix.stdin;
       Unix.close id;
       Unix.close od;
-      Unix.execvp !comm !args
+      Unix.execvp comm args
     end
 
 let handle f a =
@@ -142,4 +152,6 @@ let handle f a =
       exit 2
   | e -> Printexc.catch raise e
 
-let _ = handle go ()
+let main () = handle go ()
+
+let () = main ()
