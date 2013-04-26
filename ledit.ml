@@ -408,102 +408,102 @@ let rev_implode l =
   in
   loop (String.length s - 1) l
 
-let rec parse_string rev_cl (strm__ : _ Fstream.t) =
+let rec parse_string rev_cl (strm : _ Fstream.t) =
   match
-    match Fstream.next strm__ with
-      Some ('"', strm__) -> Some (rev_implode rev_cl, strm__)
+    match Fstream.next strm with
+      Some ('"', strm) -> Some (rev_implode rev_cl, strm)
     | _ -> None
   with
     Some _ as x -> x
   | None ->
       match
-        match Fstream.next strm__ with
-          Some ('\\', strm__) ->
-            begin match Fstream.next strm__ with
-              Some (c, strm__) -> parse_string (c :: '\\' :: rev_cl) strm__
+        match Fstream.next strm with
+          Some ('\\', strm) ->
+            begin match Fstream.next strm with
+              Some (c, strm) -> parse_string (c :: '\\' :: rev_cl) strm
             | _ -> None
             end
         | _ -> None
       with
         Some _ as x -> x
       | None ->
-          match Fstream.next strm__ with
-            Some (c, strm__) -> parse_string (c :: rev_cl) strm__
+          match Fstream.next strm with
+            Some (c, strm) -> parse_string (c :: rev_cl) strm
           | _ -> None
 
-let rec skip_to_eos (strm__ : _ Fstream.t) =
+let rec skip_to_eos (strm : _ Fstream.t) =
   match
-    match Fstream.next strm__ with
-      Some (_, strm__) -> skip_to_eos strm__
+    match Fstream.next strm with
+      Some (_, strm) -> skip_to_eos strm
     | _ -> None
   with
     Some _ as x -> x
-  | None -> Some ((), strm__)
+  | None -> Some ((), strm)
 
-let rec skip_spaces (strm__ : _ Fstream.t) =
+let rec skip_spaces (strm : _ Fstream.t) =
   match
-    match Fstream.next strm__ with
-      Some ((' ' | '\t'), strm__) -> skip_spaces strm__
+    match Fstream.next strm with
+      Some ((' ' | '\t'), strm) -> skip_spaces strm
     | _ -> None
   with
     Some _ as x -> x
   | None ->
       match
-        match Fstream.next strm__ with
-          Some ('#', strm__) -> skip_to_eos strm__
+        match Fstream.next strm with
+          Some ('#', strm) -> skip_to_eos strm
         | _ -> None
       with
         Some _ as x -> x
-      | None -> Some ((), strm__)
+      | None -> Some ((), strm)
 
-let rec parse_command rev_cl (strm__ : _ Fstream.t) =
+let rec parse_command rev_cl (strm : _ Fstream.t) =
   match
-    match Fstream.next strm__ with
-      Some (('a'..'z' | 'A'..'Z' | '-' as c), strm__) ->
-        parse_command (c :: rev_cl) strm__
+    match Fstream.next strm with
+      Some (('a'..'z' | 'A'..'Z' | '-' as c), strm) ->
+        parse_command (c :: rev_cl) strm
     | _ -> None
   with
     Some _ as x -> x
-  | None -> Some (rev_implode rev_cl, strm__)
+  | None -> Some (rev_implode rev_cl, strm)
 
 type binding =
     B_string of string
   | B_comm of string
 
-let parse_binding (strm__ : _ Fstream.t) =
+let parse_binding (strm : _ Fstream.t) =
   match
-    match Fstream.next strm__ with
-      Some ('"', strm__) ->
-        begin match parse_string [] strm__ with
-          Some (s, strm__) -> Some (B_string s, strm__)
+    match Fstream.next strm with
+      Some ('"', strm) ->
+        begin match parse_string [] strm with
+          Some (s, strm) -> Some (B_string s, strm)
         | _ -> None
         end
     | _ -> None
   with
     Some _ as x -> x
   | None ->
-      match parse_command [] strm__ with
-        Some (c, strm__) -> Some (B_comm c, strm__)
+      match parse_command [] strm with
+        Some (c, strm) -> Some (B_comm c, strm)
       | _ -> None
 
-let parse_line (strm__ : _ Fstream.t) =
-  match Fstream.next strm__ with
-    Some ('"', strm__) ->
-      begin match parse_string [] strm__ with
-        Some (key, strm__) ->
-          begin match skip_spaces strm__ with
-            Some (_, strm__) ->
-              begin match Fstream.next strm__ with
-                Some (':', strm__) ->
-                  begin match skip_spaces strm__ with
-                    Some (_, strm__) ->
-                      begin match parse_binding strm__ with
-                        Some (binding, strm__) ->
-                          begin match skip_spaces strm__ with
-                            Some (_, strm__) ->
-                              begin match Fstream.empty strm__ with
-                                Some (_, strm__) ->
-                                  Some ((key, binding), strm__)
+let parse_line (strm : _ Fstream.t) =
+  match Fstream.next strm with
+    Some ('"', strm) ->
+      begin match parse_string [] strm with
+        Some (key, strm) ->
+          begin match skip_spaces strm with
+            Some (_, strm) ->
+              begin match Fstream.next strm with
+                Some (':', strm) ->
+                  begin match skip_spaces strm with
+                    Some (_, strm) ->
+                      begin match parse_binding strm with
+                        Some (binding, strm) ->
+                          begin match skip_spaces strm with
+                            Some (_, strm) ->
+                              begin match Fstream.empty strm with
+                                Some (_, strm) ->
+                                  Some ((key, binding), strm)
                               | _ -> None
                               end
                           | _ -> None
