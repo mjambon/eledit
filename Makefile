@@ -25,8 +25,10 @@ eledit.1: eledit.1.tpl go.ml
 
 .PHONY: install
 install:
-	-cp eledit "$(BINDIR)"
-	-cp eledit.1 "$(MANDIR)"
+	-mkdir -p "$(BINDIR)"
+	-cp eledit "$(BINDIR)/"
+	-mkdir -p "$(MANDIR)"
+	-cp eledit.1 "$(MANDIR)/"
 
 .PHONY: clean
 clean:
