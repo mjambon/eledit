@@ -30,6 +30,14 @@ install:
 	-mkdir -p "$(MANDIR)"
 	-cp eledit.1 "$(MANDIR)/"
 
+.PHONY: uninstall
+uninstall:
+	rm -f "$(BINDIR)"/eledit
+	rm -f "$(MANDIR)"/eledit.1
+
+.PHONY: reinstall
+reinstall: install
+
 .PHONY: clean
 clean:
 	rm -f *.cm* *.o *~ eledit eledit.1
